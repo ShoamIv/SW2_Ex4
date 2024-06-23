@@ -63,7 +63,7 @@ std::cout <<"PostOrder: \n";
     for (auto node = tree.begin_heap(); node != tree.end_heap(); ++node) {
         std::cout << *node << std::endl;
     }
-
-      //tree.draw_tree();
+    std::cout <<"Tree Drawing: \n";
+      tree.draw_tree();
     return 0;
 }

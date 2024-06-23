@@ -2,28 +2,32 @@
 #define NODE_HPP
 
 #include <vector>
-#include <memory>
+#include <stdexcept>
 
 template <typename T>
 class Node {
 private:
+    using NodePtr = Node<T>*;
     T value;
-    std::vector<Node<T>*>* children={};
+    std::vector<NodePtr> children;
 
 public:
-    explicit Node(T val){value=val;  children = new std::vector<Node<int>*>(); }
+    explicit Node(T val) : value(val) {}
 
     T getValue() const { return value; }
 
-    void addChild(const Node<T> * child,size_t size) {
-        if (this->children->size() < size) {
-            children->push_back(child);
+    void addChild(NodePtr child,int size) {
+
+        if (children.size() < size) {
+            children.push_back(child);
         } else {
-            throw std::runtime_error("Maximum children limit reached for parent node");
+            throw std::out_of_range("Maximum children limit reached for parent node");
         }
     }
 
-    std::vector<Node<T>*>* getChildren() const {return children;}
+    const std::vector<NodePtr>& getChildren() const {
+        return children;
+    }
 };
 
 #endif // NODE_HPP

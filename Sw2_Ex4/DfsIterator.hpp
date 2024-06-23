@@ -39,12 +39,11 @@ public:
             stack.pop();
 
             // Push children of the current node onto the stack in reverse order
-            if (current->getChildren()) {
-                auto& children = *(current->getChildren());
+                auto& children = current->getChildren();
                 for (auto it = children.rbegin(); it != children.rend(); ++it) {
                     stack.push(*it);
                 }
-            }
+
         } else {
             current = nullptr; // If stack is empty, traversal is complete
         }

@@ -24,18 +24,18 @@ private:
 
     // Function to get the left child of a node
     NodePtr getLeftChild(NodePtr node) {
-        if (node == nullptr || node->getChildren()->empty()) {
+        if (node == nullptr || node->getChildren().empty()) {
             return nullptr;
         }
-        return node->getChildren()->front(); // Return the leftmost child
+        return node->getChildren().front(); // Return the leftmost child
     }
 
     // Function to get the right child of a node
     NodePtr getRightChild(NodePtr node) {
-        if (node == nullptr || node->getChildren()->size() < 2) {
+        if (node == nullptr || node->getChildren().size() < 2) {
             return nullptr;
         }
-        return node->getChildren()->at(1); // Return the right child if it exists
+        return node->getChildren().at(1); // Return the right child if it exists
     }
 
 public:

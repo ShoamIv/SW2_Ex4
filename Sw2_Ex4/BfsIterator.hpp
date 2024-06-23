@@ -38,9 +38,9 @@ public:
             current = queue.front();
             queue.pop();
 
-            // Enqueue children of the current node
-            if (current->getChildren()) {
-                for (NodePtr child : *(current->getChildren())) {
+            const auto& children = current->getChildren();
+            for (NodePtr child : children) {
+                if (child) { // Ensure child is not null before pushing
                     queue.push(child);
                 }
             }

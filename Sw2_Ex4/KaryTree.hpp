@@ -46,13 +46,10 @@ public:
     }
 
     void add_sub_node(Node<int> *parent, Node<int>  *child) {
-        if(parent->getChildren()==nullptr){
-
-        }
-        if (parent->getChildren()->size() < K) {
-            parent->getChildren()->push_back(child);
+        if(parent){
+            parent->addChild(child,K);
         } else {
-            throw std::runtime_error("Maximum children limit reached for parent node");
+            throw std::runtime_error("Not a valid parent.");
         }
         /*
         if (parent) {
@@ -90,10 +87,9 @@ public:
         if (node == nullptr) return;
         list.push_back(node->getValue());
         const auto& children = node->getChildren();
-        if (children) {
-            for (const auto& child : *children) {
+            for (const auto& child : children) {
                 treeToList(child, list);
-            }
+
         }
     }
 

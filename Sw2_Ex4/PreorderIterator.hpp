@@ -18,7 +18,7 @@
             if (node) {
                 const auto& children = node->getChildren();
                 // Push children from right to left so that left-most is on top
-                for (auto it = children->rbegin(); it != children->rend(); ++it) {
+                for (auto it = children.rbegin(); it != children.rend(); ++it) {
                     stack_Pre.push(*it);
                 }
             }
