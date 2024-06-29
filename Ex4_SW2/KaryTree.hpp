@@ -33,8 +33,10 @@ class KaryTree {
 private:
     Node<T> * root;
     std::vector<T> heap;
+    int tree_order;
 public:
-    KaryTree() : root(nullptr) {}
+
+ KaryTree() : root(nullptr), tree_order(K) {}
 
     explicit KaryTree(const T &rootValue) {
         root = std::make_shared<Node<T>>(rootValue);
@@ -49,37 +51,24 @@ public:
     }
 
     void add_sub_node(Node<T> *parent, Node<T>  *child) {
-        if(parent){
-            parent->addChild(child,K);
+        if(parent && (find_node(root,parent)) && (!find_node(root,child))){
+             parent->addChild(child,K);
         } else {
-            throw std::runtime_error("Not a valid parent.");
+            throw std::runtime_error("Not a valid parent or child.");
         }
     
     }
-    // Function to draw the tree level by level
-    void draw_tree(std::ostream& out = std::cout) const {
-        if (!root) return;
-
-        std::queue<Node<T>*> q;
-        q.push(root);
-
-        while (!q.empty()) {
-            int level_size = q.size();
-            for (int i = 0; i < level_size; ++i) {
-                auto node = q.front();
-                q.pop();
-
-                out << node->getValue() << " ";
-
-                 const auto& children = node->getChildren();
-                for (const auto& child : children) {
-                    q.push(child);
-                }
-            }
-            out << std::endl; // Move to the next level
+   bool find_node(const Node<T>* current, const Node<T>* target) {
+    if (current == target) {
+        return true;
+    }
+    for (const auto& child : current->getChildren()) {
+        if (find_node(child, target)) {
+            return true;
         }
     }
-
+    return false;
+}
     void treeToList(Node<T>* node, std::vector<T>& list) {
         if (node == nullptr) return;
         list.push_back(node->getValue());
@@ -109,28 +98,52 @@ public:
      */
 
 
-    InorderIterator<T> begin_in_order() {
-        return InorderIterator<T>(root);
+    auto begin_in_order() {
+        if constexpr (K == 2) {
+            return InorderIterator<T>(root);
+        } else {
+            return DFSIterator<T>(root);
+        }
     }
 
-    InorderIterator<T> end_in_order() {
-        return InorderIterator<T>(nullptr);
+    auto end_in_order() {
+        if constexpr (K == 2) {
+            return InorderIterator<T>(nullptr);
+        } else {
+            return DFSIterator<T>(nullptr);
+        }
     }
 
-    PreorderIterator<T> begin_pre_order() {
-        return PreorderIterator<T>(root);
+    auto begin_pre_order() {
+        if constexpr (K == 2) {
+            return PreorderIterator<T>(root);
+        } else {
+            return DFSIterator<T>(root);
+        }
     }
 
-    PreorderIterator<T> end_pre_order() {
-        return PreorderIterator<T>(nullptr);
+    auto end_pre_order() {
+        if constexpr (K == 2) {
+            return PreorderIterator<T>(nullptr);
+        } else {
+            return DFSIterator<T>(nullptr);
+        }
     }
 
-    PostorderIterator<T> begin_post_order() {
-        return PostorderIterator<T>(root);
+    auto begin_post_order() {
+        if constexpr (K == 2) {
+            return PostorderIterator<T>(root);
+        } else {
+            return DFSIterator<T>(root);
+        }
     }
 
-    PostorderIterator<T> end_post_order() {
-        return PostorderIterator<T>(nullptr);
+    auto end_post_order() {
+        if constexpr (K == 2) {
+            return PostorderIterator<T>(nullptr);
+        } else {
+            return DFSIterator<T>(nullptr);
+        }
     }
 
     BFSIterator<T> begin_bfs_scan() {
@@ -149,65 +162,90 @@ public:
         return DFSIterator<T>(nullptr);
     }
 
-    HeapIterator<T> begin_heap() {
+     HeapIterator<T> begin_heap() {
         return HeapIterator<T>(getHeap());
     }
 
-    HeapIterator<T> end_heap() {
+     HeapIterator<T> end_heap() {
         auto& heap = getHeap();
         return HeapIterator<T>(heap, heap.size());
     }
 
-   void renderTree(sf::RenderWindow& window, Node<T>* node, sf::Font& font, float x, float y, float xOffset) {
-    if (!node) return;
+   void win() {
+        sf::RenderWindow window(sf::VideoMode(800, 600), "Binary Tree Display");
+        sf::Font font;
+        if (!font.loadFromFile("./Lato-BlackItalic.ttf")) {
+            std::cerr << "Failed to load font!" << std::endl;
+            return;
+        }
+        window.clear(sf::Color::White);
 
-    // Draw the node as a circle
-    sf::CircleShape circle(30);
-    circle.setFillColor(sf::Color::White);
-    circle.setOutlineThickness(2);
-    circle.setOutlineColor(sf::Color::Black);
-    circle.setPosition(x, y);
-    window.draw(circle);
+        // Pass the root node pointer directly
+        this->tree_paint(window, *this, root, 400, 50, 200, font);
+        window.display();
 
-    T value = node->getValue();
-    std::ostringstream oss;
-    oss.precision(1);
-    oss << std::fixed << value;
-    std::string text = oss.str();
-    // Draw the node value
-    sf::Text obj(text, font, 20);
-    obj.setFillColor(sf::Color::Black);
-    sf::FloatRect textBounds = obj.getLocalBounds();
-    obj.setOrigin(textBounds.left + textBounds.width / 2.0f, textBounds.top + textBounds.height / 2.0f);
-    obj.setPosition(x + circle.getRadius(), y + circle.getRadius());
-    window.draw(obj);
-
-    // Calculate x offset for child nodes
-    float childOffset = xOffset / (node->getChildren().size() + 1); // Space for each child
-    float startX = x + circle.getRadius();
-    float startY = y + circle.getRadius() * 2;
-
-    float currX = startX - xOffset / 2; // Starting x position for children
-    float currY = startY + 30; // Distance between parent and children in y axis
-
-    int index = 0;
-    //int child_y = y + 100;
-    for (auto child : node->getChildren()) {
-        currX = startX - (xOffset / 2) + index * (xOffset); // Calculate x position based on index
-
-        // Draw edge
-        sf::Vertex line[] = {
-            sf::Vertex(sf::Vector2f(startX, startY), sf::Color::Black),
-            sf::Vertex(sf::Vector2f(currX, currY), sf::Color::Black)
-        };
-        window.draw(line, 2, sf::Lines);
-
-        // Recursively draw child node
-        renderTree(window, child, font, currX - circle.getRadius(), currY, childOffset);
-
-        index++;
+        while (window.isOpen()) {
+            sf::Event event;
+            while (window.pollEvent(event)) {
+                if (event.type == sf::Event::Closed) {
+                    window.close();
+                }
+            }
+        }
     }
-}
+
+void tree_paint(sf::RenderWindow& window, KaryTree<T, K>& tree, Node<T>* node, int x, int y, int horizontal_gap, sf::Font& font){
+         if (!node) return;
+
+        // Drawing circle and lines...
+        sf::Color circleColor = sf::Color::Green; // Red color for circles
+        sf::Color outlineColor = sf::Color::Black; // Black color for circle outline
+        sf::Color textColor = sf::Color::Black; // Black color for text
+
+        // Draw circle
+        sf::CircleShape circle(30); // Circle radius
+        circle.setFillColor(circleColor);
+        circle.setOutlineThickness(2);
+        circle.setOutlineColor(outlineColor);
+        circle.setPosition(x, y);
+        window.draw(circle);
+
+        // Convert value to string with fixed precision
+        T value = node->getValue();
+        std::ostringstream oss;
+        oss.precision(1);
+        oss << std::fixed << value;
+        std::string text = oss.str();
+
+        // Draw text
+        sf::Text textObject(text, font, 20);
+        textObject.setFillColor(textColor);
+        sf::FloatRect textBounds = textObject.getLocalBounds();
+        textObject.setOrigin(textBounds.left + textBounds.width / 2.0f,
+                            textBounds.top + textBounds.height / 2.0f);
+        textObject.setPosition(x + circle.getRadius(), y + circle.getRadius());
+        window.draw(textObject);
+
+        // Draw lines to children
+        auto children = node->getChildren();
+        int num_children = (int)children.size();
+        if (num_children > 0) {
+            for (int i = 0; i < num_children; ++i) {
+                int child_x = x - horizontal_gap / 2 + i * horizontal_gap;
+                int child_y = y + 100;
+
+                sf::Vertex line[] = {
+                    sf::Vertex(sf::Vector2f(x + circle.getRadius(), y + 2 * circle.getRadius())),
+                    sf::Vertex(sf::Vector2f(child_x + circle.getRadius(), child_y))
+                };
+                line[0].color = sf::Color::Black;
+                line[1].color = sf::Color::Black;
+                window.draw(line, 2, sf::Lines);
+
+                tree_paint(window, tree, children[i], child_x, child_y, horizontal_gap / 2, font);
+            }
+        }
+    }
 
 
 };

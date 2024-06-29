@@ -12,7 +12,7 @@ private:
     NodePtr current;
     std::stack<NodePtr> stack;
 
-    // Push the leftmost path of the subtree starting from node
+    // Function to push the leftmost path of a subtree onto the stack
     void pushLeftMostPath(NodePtr node) {
         while (node != nullptr) {
             stack.push(node);
@@ -20,7 +20,7 @@ private:
         }
     }
 
-    // Function to get the left child of a node
+    // Function to get the leftmost child of a node
     NodePtr getLeftChild(NodePtr node) {
         if (node == nullptr || node->getChildren().empty()) {
             return nullptr;
@@ -41,7 +41,11 @@ public:
     explicit InorderIterator(NodePtr root) {
         current = nullptr;
         pushLeftMostPath(root); // Start from the leftmost path of the root
-        ++(*this); // Move to the first valid node
+        if (!stack.empty()) {
+            current = stack.top();
+            stack.pop();
+            pushLeftMostPath(getRightChild(current)); // Push leftmost path of right subtree
+        }
     }
 
     // Dereference operator to get the value of the current node
@@ -57,14 +61,9 @@ public:
     // Pre-increment operator to move to the next node in the in-order traversal
     InorderIterator& operator++() {
         if (!stack.empty()) {
-            NodePtr node = stack.top();
+            current = stack.top();
             stack.pop();
-            current = node; // Set the current node
-
-            // Push the leftmost path of the right subtree
-            if (NodePtr rightChild = getRightChild(node)) {
-                pushLeftMostPath(rightChild);
-            }
+            pushLeftMostPath(getRightChild(current)); // Push leftmost path of right subtree
         } else {
             current = nullptr; // If stack is empty, traversal is complete
         }

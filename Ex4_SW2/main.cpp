@@ -16,7 +16,6 @@ int main() {
     Complex c7(11, 3.14);
     Complex c8(1, 9.9);
 
-
     Node<Complex> root(c1);
     Node<Complex> n1(c2);
     Node<Complex> n2(c3);
@@ -37,35 +36,8 @@ int main() {
     tree.add_sub_node(&n2, &n5);
     tree.add_sub_node(&n2, &n7);
 
-    root.position = sf::Vector2f(400, 50);
-    n1.position = sf::Vector2f(250, 200);
-    n2.position = sf::Vector2f(550, 200);
-    n3.position = sf::Vector2f(200, 350);
-    n4.position = sf::Vector2f(300, 350);
-    n5.position = sf::Vector2f(550, 350);
-
-    
-     sf::RenderWindow window(sf::VideoMode(800, 600), "SFML Tree Example");
      
-    // Load the font
-    sf::Font font;
-    if (!font.loadFromFile("./Lato-BlackItalic.ttf")) {
-        std::cerr << "Failed to load font!" << std::endl;
-        return 1;  // Exit if the font is not loaded
-    }
-
-     
-        window.clear(sf::Color::White);
-        // Render the tree
-        tree.renderTree(window, &root, font, root.position.x, root.position.y, 400);
-        window.display();
-        while (window.isOpen()) {
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
-    }
+     tree.win();
 
     // Output tree traversals
     std::cout << "PreOrder:\n";
@@ -98,8 +70,6 @@ int main() {
         std::cout << *node << std::endl;
     }
 
-    std::cout << "Tree Drawing:\n";
-    tree.draw_tree();
 
     return 0;
 }

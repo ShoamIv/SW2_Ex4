@@ -1,5 +1,8 @@
 #include <iostream>
 #include <stdexcept>
+#include <string>
+#include <sstream>
+#include <vector>
 
 class Complex{
 
@@ -28,5 +31,6 @@ bool operator==(const Complex &other) const;
 bool operator!=(const Complex &other) const;
 
 friend std::ostream& operator<<(std::ostream& out, const Complex& other);
+static std::string complexVectorToString(const std::vector<Complex> &vec) ;
 
  };

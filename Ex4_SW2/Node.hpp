@@ -22,6 +22,10 @@ public:
     T getValue() const { return value; }
 
     void addChild(NodePtr child,int size) {
+    
+        if(child==this){
+         throw std::out_of_range("a node cannot add himself");
+        }
 
         if (children.size() < (size_t)size) {
             children.push_back(child);

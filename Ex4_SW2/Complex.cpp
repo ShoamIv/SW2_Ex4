@@ -1,4 +1,5 @@
 #include "Complex.hpp"
+#include <cmath>
 
 
 Complex::Complex(double r, double i) : real(r), image(i) {}
@@ -27,12 +28,12 @@ Complex Complex::operator/(const Complex& other) const {
 
 bool Complex::operator>(const Complex &other) const
 {
-    return (real * real + image * image) > (other.real * real + other.image * image);
+    return std::sqrt(real * real + image * image) > std::sqrt(other.real * real + other.image * image);
 }
 
 bool Complex::operator<(const Complex &other) const
 {
-    return (real * real + image * image) < (other.real * real + other.image * image);
+    return std::sqrt(real * real + image * image) < std::sqrt(other.real * real + other.image * image);
    
 }
 
@@ -51,5 +52,13 @@ Complex Complex::operator-() const {
 std::ostream& operator<<(std::ostream& out, const Complex& other) {
   out << other.real << " + " << other.image << "i"; 
   return out ;
+}
+        
 
+std::string Complex::complexVectorToString(const std::vector<Complex> &vec) {
+    std::ostringstream oss;
+    for (const auto& complex : vec) {
+        oss << complex << "\n";
+    }
+    return oss.str();
 }
