@@ -239,7 +239,6 @@ TEST_CASE("Nodes childrens"){
         CHECK_THROWS_AS(second_tree.add_sub_node(&root2, &d4), std::runtime_error); 
     
     //adding children that alerdy exists
-
      CHECK_THROWS_AS(second_tree.add_sub_node(&d6, &d2), std::runtime_error);
 
 }

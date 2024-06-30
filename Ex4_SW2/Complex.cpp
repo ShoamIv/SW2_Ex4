@@ -54,11 +54,3 @@ std::ostream& operator<<(std::ostream& out, const Complex& other) {
   return out ;
 }
         
-
-std::string Complex::complexVectorToString(const std::vector<Complex> &vec) {
-    std::ostringstream oss;
-    for (const auto& complex : vec) {
-        oss << complex << "\n";
-    }
-    return oss.str();
-}

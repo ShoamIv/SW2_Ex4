@@ -40,6 +40,7 @@ int main() {
      tree.win();
 
     // Output tree traversals
+    
     std::cout << "PreOrder:\n";
     for (auto node = tree.begin_pre_order(); node != tree.end_pre_order(); ++node) {
         std::cout << *node << std::endl;

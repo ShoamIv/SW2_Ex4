@@ -192,6 +192,7 @@ public:
                 }
             }
         }
+    
     }
 
 void tree_paint(sf::RenderWindow& window, KaryTree<T, K>& tree, Node<T>* node, int x, int y, int horizontal_gap, sf::Font& font){

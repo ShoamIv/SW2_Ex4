@@ -29,8 +29,6 @@ bool operator>(const Complex& other) const;
 bool operator<(const Complex &other) const;
 bool operator==(const Complex &other) const;
 bool operator!=(const Complex &other) const;
-
 friend std::ostream& operator<<(std::ostream& out, const Complex& other);
-static std::string complexVectorToString(const std::vector<Complex> &vec) ;
 
  };
