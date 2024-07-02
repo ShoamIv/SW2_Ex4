@@ -23,9 +23,7 @@ TEST_OBJECTS = $(TEST_SOURCES:.cpp=.o)
 
 valgrind_test: $(TEST_EXECUTABLE)
 	valgrind --tool=memcheck $(VALGRIND_FLAGS) ./run_tests 
-
-valgrind_tree: $(TARGET)
-	valgrind --tool=memcheck $(VALGRIND_FLAGS) ./$(TARGET)	
+	
 
 # Default rule
 all: $(TARGET)
